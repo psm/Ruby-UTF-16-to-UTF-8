@@ -1,1 +1,3 @@
 A small utility to convert UTF-16 Little Endian files to UTF-8 files.
+
+Usage: utf [-n (create new file)] [file1 [file2...]]
