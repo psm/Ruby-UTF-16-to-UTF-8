@@ -1,0 +1,36 @@
+#!/usr/bin/ruby
+# coding: utf-8
+require 'iconv'
+
+if ARGV.count==0
+  abort("Usage: utf [-n (create new file)] [file1 [file2...]]")
+end
+
+if ARGV[0] == '-n'
+  ARGV.shift
+  nf = true
+end
+
+ARGV.each do |file|
+  
+  if( !`file #{file}`.match(/UTF\-16/) )
+    puts("File '#{file}' is not a valid UTF-16 file")
+    next
+  end
+  
+  ocho = File.open(file).read
+  converted = Iconv.iconv('UTF-8', 'UTF-16LE', ocho)
+  filename = file
+  
+  if nf
+    ext = File.extname(file);
+    filename = file.gsub(ext, ".utf-8#{ext}");
+  end
+  
+  File.open(filename, 'w'){ |f|
+    f.write(converted.join("\n"))
+  }
+  
+  puts("File '#{file}' was converted successfully")
+  
+end
